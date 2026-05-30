@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: xiaohongshu-ratecard-automation
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    disk:
+      name: xiaohongshu-ratecard-files
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: DATABASE_PATH
+        value: /var/data/app.db
+      - key: DATABASE_URL
+        fromDatabase:
+          name: xiaohongshu-ratecard-db
+          property: connectionString
+      - key: STORAGE_DIR
+        value: /var/data
+      - key: SECRET_KEY
+        generateValue: true
+      - key: OPENAI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: OPENAI_MODEL
+        value: gpt-4.1-mini
+
+databases:
+  - name: xiaohongshu-ratecard-db
+    databaseName: xiaohongshu_ratecard
+    user: xiaohongshu_ratecard

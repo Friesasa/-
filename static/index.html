@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>小红书媒介自动填表</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app authApp" id="authShell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Xiaohongshu Ratecard Automation</p>
+          <h1>登录小红书媒介自动填表</h1>
+          <p>每个账号都有独立的刊例库和品牌任务。首次使用先注册账号，之后可在任何电脑浏览器登录。</p>
+        </div>
+      </section>
+
+      <section class="grid">
+        <form id="loginForm" class="card">
+          <h2>登录</h2>
+          <input name="username" autocomplete="username" placeholder="用户名或邮箱" required />
+          <input name="password" type="password" autocomplete="current-password" placeholder="密码" required />
+          <button type="submit">登录</button>
+          <div id="loginResult" class="result"></div>
+        </form>
+
+        <form id="registerForm" class="card">
+          <h2>注册</h2>
+          <input name="username" autocomplete="username" placeholder="用户名或邮箱，至少 3 个字符" required />
+          <input name="password" type="password" autocomplete="new-password" placeholder="密码，至少 8 个字符" required />
+          <input name="invite_code" placeholder="邀请码（如管理员设置了才需要）" />
+          <button type="submit">注册并登录</button>
+          <div id="registerResult" class="result"></div>
+        </form>
+      </section>
+    </main>
+
+    <main class="app hidden" id="appShell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Xiaohongshu Ratecard Automation</p>
+          <h1>小红书媒介自动填表</h1>
+          <p>上传刊例和品牌表格，按达人昵称或 ID 自动补齐基础信息，粘贴二询文字后智能填表并标注缺失项。</p>
+        </div>
+        <div class="accountActions">
+          <div id="currentUser" class="meta"></div>
+          <button id="refreshTasks" type="button">刷新任务列表</button>
+          <button id="logout" type="button" class="secondary">退出登录</button>
+        </div>
+      </section>
+
+      <section class="grid">
+        <form id="ratecardForm" class="card">
+          <h2>1. 更新刊例库</h2>
+          <p>支持蒲公英导出表或已有刊例表，系统会识别昵称、账号 ID、报价、粉丝画像等字段。</p>
+          <input name="file" type="file" accept=".xlsx,.xlsm" required />
+          <div class="inlineActions">
+            <button type="submit">上传刊例</button>
+            <div id="ratecardStatus" class="uploadStatus">正在读取刊例状态...</div>
+          </div>
+          <div id="ratecardResult" class="result"></div>
+        </form>
+
+        <form id="taskForm" class="card">
+          <h2>2. 创建品牌表格任务</h2>
+          <p>上传品牌给的 Excel，系统自动识别表头并保留模板格式用于导出。</p>
+          <input name="brand_name" placeholder="品牌名（可选）" />
+          <input name="file" type="file" accept=".xlsx,.xlsm" required />
+          <button type="submit">创建任务</button>
+          <div id="taskResult" class="result"></div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="sectionHeader">
+          <div>
+            <h2>3. 在线编辑与自动补齐</h2>
+            <p>选择任务后，可按行用达人信息补基础字段，也可以粘贴二询文字补充档期、报价和反馈。</p>
+          </div>
+          <select id="taskSelect"></select>
+        </div>
+
+        <div id="taskMeta" class="meta"></div>
+        <div class="toolbar">
+          <input id="talentQuery" placeholder="输入要匹配的达人昵称 / 小红书号 / 博主 ID / 主页链接" />
+          <button id="fillTalent">按输入达人补齐选中行</button>
+          <button id="saveRows">保存编辑</button>
+          <button id="exportTask">导出 Excel</button>
+        </div>
+        <div class="toolbar freezeToolbar">
+          <input id="freezeColumns" type="number" min="0" step="1" placeholder="冻结前几个数据列，例如 0 / 3 / 6" />
+          <span class="meta">最左侧行号列会一直冻结；这里手动填写要冻结的前 N 个数据列，品牌表表头不同也可以随时改。</span>
+        </div>
+        <div class="toolbar tableSizeToolbar">
+          <span class="meta">像 Excel 一样拖动表头右边缘调列宽，拖动左侧行号底边调行高。</span>
+          <button id="resetTableSize" type="button" class="secondary">恢复当前表尺寸</button>
+        </div>
+        <div class="meta">手动补齐用于单独处理某一行：先选中表格行，再输入达人昵称或 ID，系统会从已上传刊例库填入该行的粉丝、报价等基础信息。</div>
+
+        <textarea id="inquiryText" placeholder="粘贴达人的二询文字，例如：达人可接，6月初有档期，图文 1.2w，视频 1.8w，可报备。若二询里没有达人名，请先在上方输入达人昵称或 ID。"></textarea>
+        <div class="toolbar">
+          <button id="parseInquiry">解析二询并按达人匹配填入</button>
+          <span id="status"></span>
+        </div>
+
+        <div id="missingPanel" class="missing"></div>
+        <div class="tableWrap">
+          <table id="editor"></table>
+        </div>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
+
