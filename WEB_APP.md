@@ -98,5 +98,5 @@ OPENAI_API_KEY=你的 API Key
 REGISTER_INVITE_CODE=可选的邀请码
 ```
 
-`render.yaml` 会创建 Web Service、PostgreSQL 数据库和 1GB 持久磁盘；数据库保存账号和任务数据，持久磁盘保存上传/导出的 Excel 文件。
+当前 `render.yaml` 使用免绑卡配置，只创建 Web Service，并使用本地 SQLite 和本地文件目录先跑通流程。免费实例的本地文件不保证永久保存；长期正式使用时，再把 `DATABASE_URL` 配成 PostgreSQL，并增加持久磁盘或对象存储。
 
