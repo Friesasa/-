@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    container_name: xiaohongshu-ratecard-web
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DATA_DIR: /app/data
+      DATABASE_PATH: /app/data/app.db
+      STORAGE_DIR: /app/data
+      OPENAI_BASE_URL: https://api.openai.com/v1
+      OPENAI_MODEL: gpt-4.1-mini
+      SECRET_KEY: ${SECRET_KEY}
+      REGISTER_INVITE_CODE: ${REGISTER_INVITE_CODE:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    volumes:
+      - xhs_data:/app/data
+
+volumes:
+  xhs_data:
